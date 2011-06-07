@@ -1,8 +1,15 @@
-//C3IR data structures
+module C3
+{
+    module IR
+    {
+        struct Function;
+        struct Type;
+        type Constant = Union(Function, Type, Module);
+        struct Constant
+        {
+            Expression type;
+        }
+        type Module = Map(String, Constant);
+    }
+}
 
-struct Function;
-struct Type;
-type Module = union(Function, Type);
-
-
-Map(
