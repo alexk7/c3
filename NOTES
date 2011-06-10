@@ -1,0 +1,11 @@
+C3VM:
+- Types are:
+    - An underlying native type
+    - A type tag (runtime, but should be optimized away most of the time)
+        - This allows a language-level description of the stage of construction of a C3 object:
+            - raw memory
+            - constructed (after a constructor is called)
+            - return to raw memory (after a destructor is called)
+
+The C3 language builds important additional features that are not part of C3VM:
+- type as first class citizen (also: "the type of type is type")
