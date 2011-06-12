@@ -1,8 +1,18 @@
 C3VM:
-- Types are:
+- Values are abstract entities.
+- Types are sets of values.
+    - Subset relations can be established between types that specifies safe
+      conversions between them.
+
+- Objects are:
+    - A type
+    - A representation of a value according to the type
+
+- "Concrete" Types are:
     - An underlying native type
     - A type tag (runtime, but should be optimized away most of the time)
-        - This allows a language-level description of the stage of construction of a C3 object:
+        - This allows a language-level description of the stage of construction
+          of a C3 object:
             - raw memory
             - constructed (after a constructor is called)
             - return to raw memory (after a destructor is called)
