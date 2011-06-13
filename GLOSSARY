@@ -1,7 +1,20 @@
-value: abstract entity
-value type: set of values
-datum (pl. data): value that can be manipulated directly by the computer
-data type
-object
-object type
+Value:
+Abstract entity.
 
+Value Type:
+Set of values.
+
+Datum (pl. Data):
+Information that can be manipulated by the computer.
+
+Data Type:
+Information necessary to interpret a datum as a value.
+
+Object:
+Physical entity that can store a datum.
+
+Object Type:
+Set of data that the object can currently store.
+
+State:
+The datum currently stored in an object.
