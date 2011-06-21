@@ -1,25 +1,28 @@
 
+type list(type item);
+type string;
 
-module C3
+module c3
 {
-	module IR
+	module ir
 	{
-		struct Block
+		type instruction;
+		struct lambda : instruction
 		{
 			
 		}
-		struct Function
+		struct call : instruction
 		{
-			List(Block) blocks;
+			Value* pFunction;
 		}
-		struct Type;
-		type Constant = Union(Function, Type, Module);
-		struct Call
+		type block = list(instruction);
+		type function
 		{
-			Value* pFunction; 
+			type input;
+			type output;
+			list(block) body;
 		}
-		type Value = Union(
-		type Scope = Map(String, Value);
+		type scope = dict(string, instruction);
 	}
 }
 
