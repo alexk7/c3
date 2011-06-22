@@ -8,7 +8,7 @@ module c3
 	{
 		type basicBlock = list(value);
 	
-		type function
+		struct function
 		{
 			type input;
 			type output;
@@ -21,17 +21,14 @@ module c3
 			value input;
 		}
 		
-		struct use
-		{
-			list(basicBlock).index basicBlockIndex;
-			list(value).index valueIndex;
-		}
+		type localUse = tuple(list(basicBlock).index, list(value).index);
 		
 		type global
 		
-		type value = function | call | use;
+		type value = variant(function, call, localUse);
 		
 		type scope = list(value);
+		type environment = list(scope);
 	}
 }
 
@@ -41,3 +38,7 @@ module c3
 // hold the variable. The mem2ref transformation is used to create a SSA version
 // of the same computation used for optimizations but they are ultimately
 // translated back to memory handling for the "object allocation" phase.
+
+//On hold, ideas for the future:
+//	- dependent types
+//	- pattern matching and type functions (or sooner?)
