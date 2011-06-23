@@ -2,30 +2,50 @@
 type list(type item);
 type string;
 
-module c3
+module C3
 {
-	module ir
+	module IR
 	{
-		type basicBlock = list(value);
-	
-		struct function
+		struct BasicBlock
 		{
-			type input;
-			type output;
-			list(basicBlock) body;
+			List(Instruction) instructions;
+			Terminator terminator;
+		}
+			
+		struct Function
+		{
+			Type input;
+			Type output;
+			List(BasicBlock) basicBlocks;
 		}
 		
-		struct call
+		struct Call
 		{
-			value callee;
-			value input;
+			Value callee;
+			Value input;
 		}
 		
-		type localUse = tuple(list(basicBlock).index, list(value).index);
+		type Apply : Call;
+		type Run : Call;
 		
-		type global
+		variant Instruction
+		{
+			Apply,
+			Run,
+		}
+
+		struct LocalUse
+		{
+			Function.basicBlocks.Index basicBlockIndex;
+			BasicBlock.instructions.Index instructionIndex;
+		}
 		
-		type value = variant(function, call, localUse);
+		variant Value
+		{
+			Function,
+			Apply,
+			LocalUse,
+		}
 		
 		type scope = list(value);
 		type environment = list(scope);
@@ -39,6 +59,19 @@ module c3
 // of the same computation used for optimizations but they are ultimately
 // translated back to memory handling for the "object allocation" phase.
 
+// Overloading must be supported by the IR because the object allocation phase
+// can choose a different implementation than the declared type of a variable.
+// (A concrete implementation may not even exist for the declared type.) The
+// can choose a supertype (that can represent a superset of the set represented
+// by the declared type).
+
+// Destructor calls must be implicit in the IR because of arbitrary exits and
+// exception handling. In order to allow optimizations accross multiple function
+// calls, handling of dynamically changing function epilog must be automatic and
+// implicit. For example, the number destructors to call change depending of the
+// exit point.
+
 //On hold, ideas for the future:
 //	- dependent types
+//	- exception handling
 //	- pattern matching and type functions (or sooner?)
