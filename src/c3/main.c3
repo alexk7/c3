@@ -26,11 +26,15 @@ namespace C3.IR
 	struct Call : Callee fn, Argument arg;
 	
 	struct Return : Argument;
-	struct Branch : Argument cond, InstructionIterator then, InstructionIterator else;
+	type Branch > UnconditionalBranch, ConditionalBranch;
 	struct Unreachable;
 	
 	type Callee > Function, InstructionIterator;
 	type Argument > Constant, InstructionIterator;
+	
+	struct UnconditionalBranch : InstructionIterator;
+	struct ConditionalBranch :
+		Argument cond, InstructionIterator then, InstructionIterator else;
 	
 	type Constant > Integer, Function;
 }
@@ -40,7 +44,7 @@ namespace C3.IR
 // the function. Terminator instructions can only direct the flow of
 // execution to the beginning of non-entry basic blocks.
 // It starts with either:
-//	-	The first instruction of the function, which is always an Input
+//	-	The first instruction of the function, which is always a Parameter
 //		instruction. In this case, the basic block is the "Entry Block".
 //	-	The instruction following a Terminator instruction, which mark the end of
 //		the previous basic block.
@@ -50,8 +54,8 @@ namespace C3.IR
 
 // Rules for the entry block:
 //	-	It is always the first basic block of a function.
-//	- Its first instruction is always an Input instruction. Input instructions
-//		cannot appear anywhere else.
+//	- Its first instruction is always a Parameter instruction. Parameter
+//		instructions cannot appear anywhere else.
 //	- It contains no Phi instructions.
 
 // Rules for all blocks:
