@@ -1,67 +1,49 @@
-type Container(type Item);
-type StableIterator(Container c);
-type Sequence(type Item) : Container(Item);
+type Array(type Item);
+type StableIterator(Array(type Item));
 type Integer;
 
 namespace C3.IR
-{
-	struct Function
-	{
-		Type in;
-		Type out;
-		Sequence(BasicBlock) bbs;
-	}
+{	
+	struct Function : FunctionType type, Array(Instruction) insts;
 	
-	struct BasicBlock
-	{
-		Sequence(Instruction) insts;
-		Terminator end;
-	}
+	struct FunctionType : Type parameterT, Type returnT;
+	type Instruction > Parameter, Phi, Apply, Run, Terminator;
 	
-	variant Instruction
-	{
-		Input,
-		Phi,
-		Apply,
-		Run,
-	}
+	type Type > FunctionType, IntegerType, StructType, ArrayType;
 	
-	struct Input
-	{
-	}
+	struct Parameter;
+	struct Phi : InstructionIterator iComeFrom, InstructionIterator iValue;
+	struct Apply : Call;
+	struct Run : Call;
+	type Terminator > Return, Branch, Unreachable;
+
+	struct IntegerType;
+	struct StructType : Array(Type) memberTypes;
+	struct ArrayType : Type memberType, Integer size;
 	
-	struct Phi
-	{
-		BasicBlockIterator iBB;
-		Use use;		
-	}
+	type InstructionIterator = StableIterator(Function.insts);
 	
-	type Apply : Call;
-	type Run : Call;
+	struct Call : Callee fn, Argument arg;
 	
-	type BasicBlockIterator = StableIterator(Function.bbs);
+	struct Return : Argument;
+	struct Branch : Argument cond, InstructionIterator then, InstructionIterator else;
+	struct Unreachable;
 	
-	struct Use
-	{
-		BasicBlockIterator iBB;
-		InstructionIterator iI;
-	}
+	type Callee > Function, InstructionIterator;
+	type Argument > Constant, InstructionIterator;
 	
-	struct Call
-	{
-		Value callee;
-		Value arg;
-	}
-	
-	type InstructionIterator = StableIterator(BasicBlock.insts);
-	
-	variant Value
-	{
-		Function,
-		Integer,
-		Use,
-	}
+	type Constant > Integer, Function;
 }
+
+// A basic block is a range of instructions inside a function. It is an
+// important concept because they form the nodes of the control flow graph of
+// the function. Terminator instructions can only direct the flow of
+// execution to the beginning of non-entry basic blocks.
+// It starts with either:
+//	-	The first instruction of the function, which is always an Input
+//		instruction. In this case, the basic block is the "Entry Block".
+//	-	The instruction following a Terminator instruction, which mark the end of
+//		the previous basic block.
 
 // A valid function must contain at least one basic block, called the "entry
 // block".
@@ -103,18 +85,22 @@ namespace C3.IR
 // supported to introduce and remove part of the epilog. In fact, after object
 // allocation, all destructor calls will be explicit using this facility.
 
-//Part of minimal feature set:
+// Part of minimal feature set:
 //	-	Integers
 //	-	Arrays
 //	-	(Text does not require special features since it is an array of integers
 //		representing utf-32 characters)
 
-//On hold, ideas for the future:
+// On hold, ideas for the future:
 //	- dependent types
 //	- exception handling
 //	- rational and floating-point numbers
 //	- symbolic computation
 //	- pattern matching and type functions (or sooner?)
+
+// The Plan is to NOT implement those:
+//	-	Switch and IndirectBranch instructions. Both can be simulated with Branch
+//		instructions.
 
 //Rules for names:
 //	-	Global names do not contain any abbreviation and have an unambiguous
@@ -125,3 +111,5 @@ namespace C3.IR
 //		short as possible. Sometimes, the type of a parameter is enough to
 //		understand its purpose and a single letter name is enough (it is still
 //		required by the C3 syntax to have a name for the parameter).
+
+// A C3 Array is equivalent to a C++ Random Access Container.
