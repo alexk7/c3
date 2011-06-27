@@ -1,29 +1,29 @@
-type Array(type Item);
-type StableIterator(Array(type Item));
+type Sequence(type Item);
+type StableIterator(Sequence(type Item));
 type Integer;
 
 namespace C3.IR
 {	
-	struct Function : FunctionType type, Array(Instruction) insts;
+	struct Function : FunctionType type, Sequence(Instruction) insts;
 	
 	struct FunctionType : Type parameterT, Type returnT;
 	type Instruction > Parameter, Phi, Apply, Run, Terminator;
 	
 	type Type > FunctionType, IntegerType, StructType, ArrayType;
 	
-	struct Parameter;
+	struct Parameter : Type;
 	struct Phi : InstructionIterator iComeFrom, InstructionIterator iValue;
 	struct Apply : Call;
 	struct Run : Call;
 	type Terminator > Return, Branch, Unreachable;
 
-	struct IntegerType;
-	struct StructType : Array(Type) memberTypes;
+	struct IntegerType : Integer bitCount;
+	struct StructType : Sequence(Type) memberTypes;
 	struct ArrayType : Type memberType, Integer size;
 	
 	type InstructionIterator = StableIterator(Function.insts);
 	
-	struct Call : Callee fn, Argument arg;
+	struct Call : Type ty, Callee fn, Argument arg;
 	
 	struct Return : Argument;
 	type Branch > UnconditionalBranch, ConditionalBranch;
@@ -61,6 +61,11 @@ namespace C3.IR
 // Rules for all blocks:
 //	-	Phi instructions must all be grouped together at the beginning of the
 //		instruction sequence.
+//	-	Ends with a Terminator instruction.
+
+// Rules for the exit block:
+//	- Ends with a Return instruction. Return instructions cannot appear
+//		anywhere else.
 
 // Function: modular piece of code. The whole program itself is a Function.
 // Any I/O in the C3IR program is done using functions passed as input (this is
