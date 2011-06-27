@@ -9,7 +9,7 @@ namespace C3.IR
 	struct FunctionType : Type parameterT, Type returnT;
 	type Instruction > Parameter, Phi, Apply, Run, Terminator;
 	
-	type Type > FunctionType, IntegerType, StructType, ArrayType;
+	type Type > FunctionType, IntegerType, TupleType, ArrayType;
 	
 	struct Parameter : Type;
 	struct Phi : InstructionIterator iComeFrom, InstructionIterator iValue;
@@ -18,7 +18,7 @@ namespace C3.IR
 	type Terminator > Return, Branch, Unreachable;
 
 	struct IntegerType : Integer bitCount;
-	struct StructType : Sequence(Type) memberTypes;
+	struct TupleType : Sequence(Type) memberTypes;
 	struct ArrayType : Type memberType, Integer size;
 	
 	type InstructionIterator = StableIterator(Function.insts);
