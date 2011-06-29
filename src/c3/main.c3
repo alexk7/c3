@@ -6,7 +6,7 @@ namespace C3.IR
 {	
 	struct Function : FunctionType type, Sequence(Instruction) insts;
 	
-	struct FunctionType : Type parameterT, Type returnT;
+	struct FunctionType : Type parameterTy, Type returnTy;
 	type Instruction > Parameter, Phi, Apply, Run, Terminator;
 	
 	type Type > FunctionType, IntegerType, TupleType, ArrayType;
@@ -17,7 +17,7 @@ namespace C3.IR
 	struct Run : Call;
 	type Terminator > Return, Branch, Unreachable;
 
-	struct IntegerType : Integer bitCount;
+	struct IntegerType;
 	struct TupleType : Sequence(Type) memberTypes;
 	struct ArrayType : Type memberType, Integer size;
 	
@@ -95,17 +95,18 @@ namespace C3.IR
 // allocation, all destructor calls will be explicit using this facility.
 
 // Part of minimal feature set:
-//	-	Integers
-//	-	Arrays
+//	-	Integers (arbitrary size, implementation supplied by the interpreter)
+//	-	Arrays (fixed size)
 //	-	(Text does not require special features since it is an array of integers
 //		representing utf-32 characters)
 
-// On hold, ideas for the future:
+// On hold:
+//	- fixed size integers
+//	- rational and floating-point numbers
+//	- pattern matching and type functions
 //	- dependent types
 //	- exception handling
-//	- rational and floating-point numbers
 //	- symbolic computation
-//	- pattern matching and type functions (or sooner?)
 
 // The Plan is to NOT implement those:
 //	-	Switch and IndirectBranch instructions. Both can be simulated with Branch
