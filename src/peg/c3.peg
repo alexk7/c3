@@ -1,0 +1,23 @@
+Statement      <= SideEffectCall
+SideEffectCall <= Expression BANG OPEN (Expression (COMMA Expression)*)? CLOSE
+
+Expression     <= IDENTIFIER / LITERAL
+
+IDENTIFIER <- Identifier Spacing
+Identifier <= [a-zA-Z_][a-zA-Z0-9_]*
+
+LITERAL   <= ( ['] (!['] Char)* [']
+             / ["] (!["] Char)* ["] ) Spacing
+						 
+BANG      <- '!' Spacing
+OPEN      <- '(' Spacing
+CLOSE     <- ')' Spacing
+COMMA     <- ',' Spacing
+
+Spacing       <- (Space / Comment)*
+Comment       <- '//' (!EndOfLine .)* EndOfLine
+CommentSingle <- '//' (!EndOfLine .)* EndOfLine
+CommentMulti  <- '/*' (!'*/' . / CommentMulti)* '*/'
+Space         <- ' ' / '\t' / EndOfLine
+EndOfLine     <- '\n' / '\r' '\n'?
+EndOfFile     <- !.
