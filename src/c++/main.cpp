@@ -7,11 +7,10 @@
 //
 
 #include <iostream>
+#include "C3Parser.h"
 
 int main (int argc, const char * argv[])
 {
-
-    // insert code here...
-    std::cout << "Hello, World!\n";
-    return 0;
+	//c3Parser::Iterator iStmt = Traverse();
+	return 0;
 }

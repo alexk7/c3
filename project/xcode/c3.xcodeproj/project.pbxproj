@@ -7,8 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		624DBA8D141A65290029A26F /* c3.peg in Sources */ = {isa = PBXBuildFile; fileRef = 624DBA80141A3F160029A26F /* c3.peg */; };
 		62E4F5C113B0E32C0040A25F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E4F5C013B0E32C0040A25F /* main.cpp */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		624DBA8B141A60840029A26F /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.peg";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}Parser.cpp",
+				"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}Parser.h",
+			);
+			script = "ipg --peg-file ${INPUT_FILE_PATH} --dir ${DERIVED_FILE_DIR}/ --name ${INPUT_FILE_BASE}Parser --no-lines\n";
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		62E4F59313B0D40F0040A25F /* CopyFiles */ = {
@@ -23,7 +39,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		624DBA80141A3F160029A26F /* c3.peg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = c3.peg; path = ../../src/peg/c3.peg; sourceTree = "<group>"; };
+		624DBA80141A3F160029A26F /* c3.peg */ = {isa = PBXFileReference; explicitFileType = sourcecode.yacc; fileEncoding = 4; name = c3.peg; path = ../../src/peg/c3.peg; sourceTree = "<group>"; };
 		62E4F59513B0D40F0040A25F /* c3 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = c3; sourceTree = BUILT_PRODUCTS_DIR; };
 		62E4F5C013B0E32C0040A25F /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = "../../src/c++/main.cpp"; sourceTree = "<group>"; };
 		62E4F5C613B0E3740040A25F /* c3.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; name = c3.1; path = ../../src/man_page/c3.1; sourceTree = "<group>"; };
@@ -112,6 +128,7 @@
 				62E4F59313B0D40F0040A25F /* CopyFiles */,
 			);
 			buildRules = (
+				624DBA8B141A60840029A26F /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -148,6 +165,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				62E4F5C113B0E32C0040A25F /* main.cpp in Sources */,
+				624DBA8D141A65290029A26F /* c3.peg in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,6 +184,10 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/opt/local/include,
+					/usr/local/include,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -181,6 +203,10 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/opt/local/include,
+					/usr/local/include,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				SDKROOT = macosx;
 			};
