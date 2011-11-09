@@ -1,25 +1,79 @@
-Statement      <= SideEffectCall
-SideEffectCall <= Expression BANG OPEN (Expression (COMMA Expression)*)? CLOSE
-
-Expression     <= IDENTIFIER / LITERAL
-
+Stmt <- Block / If / Switch / Loop / Jump / Return / Label / ExprStmt
+Block <- CURLY_OPEN Stmt CURLY_CLOSE
+If <- IF ParenExpr Stmt (ELSE Stmt)?
+Switch <- SWITCH ParenExpr? CURLY_OPEN Case* CURLY_CLOSE
+Loop <- LOOP Stmt
+Jump <- (BREAK / CONTINUE) IDENTIFIER SEMICOLON
+Return <- RETURN Expr? SEMICOLON
+Label <- IDENTIFIER COLON Stmt
+ExprStmt <- Expr SEMICOLON
+Case <- (CASE Expr / DEFAULT) COLON Stmt
+Expr <- AssignExpr / TernaryExpr
+AssignExpr <- UnaryExpr ASSIGNOP Expr
+TernaryExpr <- OrExpr (QUESTION Expr COLON Expr)?
+OrExpr <- XorExpr (OR OrExpr)?
+XorExpr <- AndExpr (XOR XorExpr)?
+AndExpr <- EqualExpr (AND AndExpr)?
+EqualExpr <- RelExpr (EQUALOP EqualExpr)?
+RelExpr <- AddExpr (RELOP RelExpr)?
+AddExpr <- MulExpr (ADDOP AddExpr)?
+MulExpr <- ExpExpr (MULOP MulExpr)?
+ExpExpr <- UnaryExpr (EXPOP ExpExpr)?
+UnaryExpr <- PREFIXOP UnaryExpr / PrimaryExpr Suffix*
+Suffix <- Call / Subscript / MemberAccess / IndirectMemberAccess / SUFFIXOP
+Call <- PAREN_OPEN Args? PAREN_CLOSE
+Subscript <- SQUARE_OPEN Args? SQUARE_CLOSE
+MemberAccess <- DOT IDENTIFIER
+IndirectMemberAccess <- ARROW IDENTIFIER
+Args <- Stmt Args? / Expr (COMMA Args)?
+PrimaryExpr <- IDENTIFIER / NUMBER / STRING / ParenExpr
+ParenExpr <- PAREN_OPEN Expr PAREN_CLOSE
+CURLY_OPEN <- '{' Spacing
+CURLY_CLOSE <- '}' Spacing
+PAREN_OPEN <- '(' Spacing
+PAREN_CLOSE <- ')' Spacing
+SQUARE_OPEN <- '[' Spacing
+SQUARE_CLOSE <- ']' Spacing
+IF <- 'if' Spacing
+ELSE <- 'else' Spacing
+SWITCH <- 'switch' Spacing
+CASE <- 'case' Spacing
+DEFAULT <- 'default' Spacing
+LOOP <- 'loop' Spacing
+BREAK <- 'break' Spacing
+CONTINUE <- 'continue' Spacing
+RETURN <- 'return' Spacing
 IDENTIFIER <- Identifier Spacing
-Identifier <= [a-zA-Z_][a-zA-Z0-9_]*
-
-LITERAL   <= ( ['] (!['] Char)* [']
-             / ["] (!["] Char)* ["] ) Spacing
-Char      <= '\\' ([nrt'"\[\]\\] / [1-9][0-9]*)
-           / !'\\' .
-					 						 
-BANG      <- '!' Spacing
-OPEN      <- '(' Spacing
-CLOSE     <- ')' Spacing
-COMMA     <- ',' Spacing
-
-Spacing       <- (Space / Comment)*
-Comment       <- '//' (!EndOfLine .)* EndOfLine
-CommentSingle <- '//' (!EndOfLine .)* EndOfLine
-CommentMulti  <- '/*' (!'*/' . / CommentMulti)* '*/'
-Space         <- ' ' / '\t' / EndOfLine
-EndOfLine     <- '\n' / '\r' '\n'?
-EndOfFile     <- !.
+DOT <- '.' Spacing
+ARROW <- '->' Spacing
+COLON <- ':' Spacing
+SEMICOLON <- ';' Spacing
+COMMA <- ',' Spacing
+QUESTION <- '?' Spacing
+OR <- 'or' Spacing
+XOR <- 'xor' Spacing
+AND <- 'and' Spacing
+ASSIGNOP <- (([+-~*/\\%^] / 'and' / 'or' / 'xor' )? '=') / '<<' Spacing
+EQUALOP <- [=!] '=' Spacing
+RELOP <- [<>] '='? Spacing
+ADDOP <- [+-~] Spacing
+MULOP <- [*/\\%] Spacing
+EXPOP <- '^' Spacing
+PREFIXOP <- ('++' / '--' / [!+-@] / 'const' / 'mutable') Spacing
+SUFFIXOP <- ('++' / '--') Spacing
+NUMBER <- ('0b' BinaryNumber / '0x' HexadecimalNumber / DecimalNumber) Spacing
+STRING <- ["] StringChar* ["] Spacing
+DecimalNumber <- DecimalDigit+ ('.' DecimalDigit+)?
+HexadecimalNumber <- HexadecimalDigit+ ('.' HexadecimalDigit+)?
+BinaryNumber <- BinaryDigit+ ('.' BinaryDigit+)?
+DecimalDigit <- [0-9]
+HexadecimalDigit <- [0-9A-F]
+BinaryDigit <- [01]
+StringChar <- '\\' ([nrt"\\] / [1-9][0-9]*) / ![\\\r\n] .
+Identifier <- [a-zA-Z_][a-zA-Z0-9_]*
+Spacing <- (Space / LineComment / MultiComment)*
+LineComment <- '//' (!EndOfLine .)* EndOfLine
+MultiComment <- '/*' (!('/*' / '*/') . / MultiComment)* '*/'
+Space <- ' ' / '\t' / EndOfLine
+EndOfLine <- '\n' / '\r' '\n'?
+EndOfFile <- !.
