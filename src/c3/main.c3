@@ -82,7 +82,7 @@ namespace C3.IR
 
 // Overloading must be supported by the IR because the object allocation phase
 // can choose a different implementation than the declared type of a variable.
-// (A concrete implementation may not even exist for the declared type.) The
+// (A concrete implementation may not even exist for the declared type.) The compiler
 // can choose a supertype (that can represent a superset of the set represented
 // by the declared type).
 
